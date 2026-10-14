@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Parking System</title>
+<style>
+body{margin:0;padding:25px;font-family:Arial;background:#091322;color:white}
+h1{color:#62dcff}
+.card{background:#142239;padding:20px;margin:15px 0;border-radius:14px;border:1px solid #344b68}
+.slots{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:12px}
+.slot{padding:25px 10px;text-align:center;border-radius:12px;background:#173c31;color:#75ffae}
+.occupied{background:#54272c;color:#ff9292}
+button{padding:10px 14px;margin-top:10px;border:0;border-radius:7px;cursor:pointer}
+table{width:100%;border-collapse:collapse}
+td,th{padding:9px;border:1px solid #42536a;text-align:center}
+</style>
+</head>
+<body>
+<h1>🅿️ SMART PARKING SYSTEM</h1>
+<p>Interactive Verilog Digital Logic Project</p>
+
+<div class="card">
+<h2>Live Parking Monitor</h2>
+<div class="slots" id="slots"></div>
+<h2 id="status"></h2>
+<p id="equation"></p>
+</div>
+
+<div class="card">
+<h2>Truth Table — Sample Simulation</h2>
+<table>
+<tr><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>FULL</th><th>AVAILABLE</th></tr>
+<tbody id="truth"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Verilog Project</h2>
+<p>Design: smartparking.v</p>
+<p>Testbench: smartparking_tb.v</p>
+<p>Simulator: Icarus Verilog | Waveform: GTKWave</p>
+<p>FULL = S1 AND S2 AND S3 AND S4</p>
+<p>AVAILABLE = NOT FULL</p>
+</div>
+
+<script>
+const slots=[0,0,0,0];
+function render(){
+const full=slots.every(x=>x===1);
+document.getElementById('slots').innerHTML=slots.map((v,i)=>
+`<div class="slot ${v?'occupied':''}">SLOT ${i+1}<br><h2>${v?'🔴 OCCUPIED':'🟢 EMPTY'}</h2><button onclick="toggle(${i})">${v?'Mark Empty':'Mark Occupied'}</button></div>`
+).join('');
+document.getElementById('status').textContent=full?'PARKING FULL':'PARKING AVAILABLE';
+document.getElementById('equation').textContent=`FULL = ${slots.join(' AND ')} = ${full?1:0} | AVAILABLE = ${full?0:1}`;
+}
+function toggle(i){slots[i]=1-slots[i];render();}
+for(let n=0;n<16;n++){
+const b=n.toString(2).padStart(4,'0').split('').map(Number);
+const f=b.every(x=>x===1)?1:0;
+document.getElementById('truth').innerHTML+=`<tr>${b.map(x=>`<td>${x}</td>`).join('')}<td>${f}</td><td>${1-f}</td></tr>`;
+}
+render();
+</script>
+</body>
+</html>
